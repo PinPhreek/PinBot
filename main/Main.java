@@ -9,7 +9,6 @@ public class Main {
 		Bot bot = new Bot();
 		bot.setVerbose(true);
 		bot.connect("irc.twitch.tv", 6667, Config.oauth);
-		//System.out.print("Channelname: " + (bot.chName = new Scanner(System.in).nextLine()));
 		bot.chName = Config.channel;
 		bot.joinChannel("#" + Config.channel);
 		bot.sendMessage("#" + bot.chName, "Hello Chat!");
