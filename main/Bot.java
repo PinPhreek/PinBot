@@ -30,9 +30,14 @@ public class Bot extends PircBot {
 	}
 
 	@Override
+	protected void onDisconnect() {
+		this.sendMsg(Config.accName, Config.channel, "Bye bye everyone!");
+		super.onDisconnect();
+	}
+	@Override
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 
-		if(message.contains("!mute") && !this.mute && Config.enableMute) {
+		/*if(message.contains("!mute") && !this.mute && Config.enableMute) {
 			if(sender.equalsIgnoreCase(chName)) {
 				this.mute = true;
 				splitt = message.split(" ");
@@ -59,7 +64,7 @@ public class Bot extends PircBot {
 			}
 			else
 				return;
-		}
+		}*/
 		
 		if(!isInList(sender) && !this.mute && Config.enableMotd) {
 			sendGreeting(sender,channel);
@@ -73,7 +78,7 @@ public class Bot extends PircBot {
 			}
 		}
 		
-		if(message.contains("!motd") || message.contains("!greeting") && Config.enableMotd) {//TODO motd speichern
+		if(message.startsWith("!motd") || message.startsWith("!greeting") && Config.enableMotd) {
 			System.out.println("MOTD");
 			if(sender.equalsIgnoreCase(chName)) {
 				splitt = null;
@@ -145,12 +150,9 @@ public class Bot extends PircBot {
 			splitt = message.split(" ");
 			if (splitt.length > 1) {
 				
-				splitt[1] = splitt[1].toLowerCase();
-				splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
+				splitt[1] = splitt[1].toLowerCase().substring(0, 1).toUpperCase() + splitt[1].substring(1);
 				this.sendMsg(sender, channel, "https://universe.leagueoflegends.com/en_US/story/champion/" + splitt[1]);
-				
-				//splitt[1] = splitt[1].toLowerCase();
-				//super.sendMessage(channel, riot.getChampionInformation(splitt[1]));
+
 			} 
 			else {
 				this.sendMsg(sender, channel, "You forgot to say me the name of the champion $s.");
@@ -160,7 +162,7 @@ public class Bot extends PircBot {
 		else if (message.equalsIgnoreCase("!version") && Config.enableVersion) {
 			this.sendMsg(sender, channel, "Quotes-Twitchbot by Pin Phreek v." + VERSION);
 		}
-		else if(message.equalsIgnoreCase("!secret") && Config.enableSecret) {
+		else if(message.equalsIgnoreCase("!secret") && Config.enableSecret) {//TODO do these sometimes random
 			switch(rand.nextInt(10)) {
 			case 0:
 				this.sendMsg(sender, channel, "That tasted too purple... (error message) - Pin Phreek");
@@ -187,10 +189,10 @@ public class Bot extends PircBot {
 				this.sendMsg(sender, channel, "It's now " + System.currentTimeMillis() + " ms from the 1.1.1970");
 				break;
 			case 8:
-				this.sendMsg(sender, channel, "No this command doesn't exits. $s");
+				this.sendMsg(sender, channel, "What did you do $s?");
 				break;
 			case 9:
-				this.sendMsg(sender, channel, "Ok google! *Google-Dot-Sounds* Clear history.");
+				this.sendMsg(sender, channel, "Ok google! *Google-Dot-Sounds* Play Despacito.");
 				break;
 			default:
 				this.sendMsg(sender, channel, "Something went terribly, terribly wrong! Please write a message to @Pin_Phreek_yt that you used the secret command and got this message. For more information uns !bug $s.");
@@ -198,9 +200,6 @@ public class Bot extends PircBot {
 		}
 		else if(message.equalsIgnoreCase("!bug")) {
 			this.sendMsg(sender, channel, "If you found a bug write @Pin_Phreek_yt a message or write an email to derneue49@gmail.com.");
-		}
-		else if(message.equalsIgnoreCase("!uwu") && Config.enableUwu) {
-			this.sendMsg(sender, channel, "doskiiUwus doskiiUwus doskiiUwus doskiiUwus doskiiUwus doskiiUwus doskiiUwus");
 		}
 		else if(message.equalsIgnoreCase("!story") && Config.enableStory) {
 			this.sendMsg(sender, channel, "Hey $c, tell $s a story.");
@@ -231,32 +230,16 @@ public class Bot extends PircBot {
 				System.exit(0);
 			}
 			else
-				sendMsg(sender, channel, "You are not $c $s");
+				sendMsg(sender, channel, "You are not $c, $s");
 		}
 	}
 	private void sendGreeting(String sender, String channel) {
-		String send = motd.replace("$c", chName + "");
-		System.out.println(send);
-		String r_send = send.replace("$s", "@" + sender);
-		super.sendMessage(channel, r_send);
+		super.sendMessage(channel, motd.replace("$c", chName + "").replace("$s", "@" + sender));
 	}
 	
 	private void sendMsg(String sender, String channel, String message) {
-		String s1 = message.replace("$c", chName);
-		String s2 = s1.replace("$s", "@" + sender);
-		super.sendMessage(channel, s2);
+		super.sendMessage(channel,  message.replace("$c", chName).replace("$s", "@" + sender));
 	}
-	
-	@SuppressWarnings("unused")
-	@Deprecated
-	private void sendMsg(String sender, String channel, String message, Object extra) {
-		String s1 = message.replace("$c", chName);
-		String s2 = s1.replace("$s", "@" + sender);
-		s1 = null;
-		s1 = s2.replace("$i", String.valueOf(extra));
-		super.sendMessage(channel, s2);
-	}
-
 	private boolean isInList(String name) {
 		
 		boolean found = false;
