@@ -93,4 +93,12 @@ public class Reader {
 				+ quotes.size() + " quotes, which are normally " + (int) (length / quotes.size()) + " characters long";
 
 	}
+	public String getLine(String champion, int line) {
+		readContents(champion);
+		if (quotes.size() < line) {
+			this.failure = true;
+			return null;
+		}
+		return quotes.get(line -1);
+	}
 }

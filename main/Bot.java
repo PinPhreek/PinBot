@@ -19,10 +19,8 @@ public class Bot extends PircBot {
 	Random rand = new Random();
 	public static String[] splitt = null;
 	public static List<String> names = new ArrayList<String>();
-	private long starttime = 0, startmutetime = 0;
+	private long starttime = 0;
 	private boolean mute = false;
-	private int mutetime = 0;
-
 	public Bot() {
 		super.setName(Config.accName);
 		System.out.printf("Account Name: %s\n", Config.accName);
@@ -184,43 +182,57 @@ public class Bot extends PircBot {
 		splitt = message.split(" ");
 		if (splitt[1].equalsIgnoreCase("bard") || splitt[1].equalsIgnoreCase("rek'sai")
 				|| splitt[1].equalsIgnoreCase("reksai")) {
-			this.sendMsg(sender, channel, (splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1)) + " has no quotes.");
+			this.sendMsg(sender, channel,
+					(splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1)) + " has no quotes.");
 			return;
 		}
-		if (splitt[0].equalsIgnoreCase("!quote")) {
-			if (splitt.length == 1) {
-				r.failure = false;
+		try {
+			if (splitt[0].equalsIgnoreCase("!quote")) {
+				if (splitt.length == 1) {
+					r.failure = false;
+				} else if (splitt.length == 2) {
+					r.failure = false;
+					message = r.getRandomLine(splitt[1]);
+					splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
+					if (!r.failure)
+						this.sendMsg(sender, channel, message + " - " + splitt[1]);
+					else
+						this.sendMsg(sender, channel, "I'm sorry $s. It seems the champion " + splitt[1]
+								+ " doesn't exist or isn't in the database now");
+				} else if (splitt.length == 3
+						&& (splitt[2].equalsIgnoreCase("number") || splitt[2].equalsIgnoreCase("count"))) {
+					r.failure = false;
+					i = r.getNumberOfQuotes(splitt[1]);
+					splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
+					if (!r.failure)
+						super.sendMessage(channel, "The champion " + splitt[1] + " has " + i + " quotes");
+					else
+						this.sendMsg(sender, channel, "I'm sorry $s. It seems the champion " + splitt[1]
+								+ " doesn't exist or isn't in the database now");
+				} else if (splitt.length == 3
+						&& (splitt[2].equalsIgnoreCase("stats") || splitt[2].equalsIgnoreCase("statistics"))) {
+					r.failure = false;
+					message = r.getStats(splitt[1]);
+					splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
+					if (!r.failure)
+						this.sendMsg(sender, channel, message);
+					else
+						this.sendMsg(sender, channel, "I'm sorry $s. It seems the champion " + splitt[1]
+								+ " doesn't exist or isn't in the database now");
+				} else if (splitt.length == 3 && splitt[2].chars().allMatch(Character::isDigit)) {
+					r.failure = false;
+					message = r.getLine(splitt[1], Integer.valueOf(splitt[2]));
+					splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
+					if(!r.failure)
+						this.sendMsg(sender, channel, message + " - " + splitt[1]);
+					else
+						this.sendMsg(sender, channel, "$s, that quote doesn't exist!");
+				} /*else
+					this.sendMsg(sender, channel, "You forgot to name me a champion $s.");*/
+
 			}
-			else if (splitt.length == 2) {
-				r.failure = false;
-				message = r.getRandomLine(splitt[1]);
-				splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
-				if (!r.failure) 
-					this.sendMsg(sender, channel, message + " - " + splitt[1]);
-				else
-					this.sendMsg(sender, channel, "I'm sorry $s. It seems the champion " + splitt[1]
-							+ " doesn't exist or isn't in the database now");
-			} else if (splitt.length == 3 && (splitt[2].equalsIgnoreCase("number") || splitt[2].equalsIgnoreCase("count"))) {
-				r.failure = false;
-				i = r.getNumberOfQuotes(splitt[1]);
-				splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
-				if (!r.failure)
-					super.sendMessage(channel, "The champion " + splitt[1] + " has " + i + " quotes"); 
-				else
-					this.sendMsg(sender, channel, "I'm sorry $s. It seems the champion " + splitt[1]
-							+ " doesn't exist or isn't in the database now");
-			} else if (splitt.length == 3
-					&& (splitt[2].equalsIgnoreCase("stats") || splitt[2].equalsIgnoreCase("statistics"))) {
-				r.failure = false;
-				message = r.getStats(splitt[1]);
-				splitt[1] = splitt[1].substring(0, 1).toUpperCase() + splitt[1].substring(1);
-				if (!r.failure)
-					this.sendMsg(sender, channel, message);
-				else
-					this.sendMsg(sender, channel, "I'm sorry $s. It seems the champion " + splitt[1]
-							+ " doesn't exist or isn't in the database now");
-			} else
-				this.sendMsg(sender, channel, "You forgot to name me a champion $s.");
+		} catch (IndexOutOfBoundsException e) {
+			e.printStackTrace();
 		}
 	}
 }

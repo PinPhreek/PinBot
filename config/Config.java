@@ -35,7 +35,6 @@ public class Config {
 	public static String oauth = null;
 	public static String channel = null;
 	
-	@SuppressWarnings("unlikely-arg-type")
 	public Config() throws IOException {
 		
 		os = System.getProperties().getProperty("os.name");
@@ -184,9 +183,9 @@ public class Config {
 			}
 			
 			//remove unnecessary lines
-			for(int i = badLines.size(); i > -1;i--) {
+			/*for(int i = badLines.size(); i > -1;i--) {
 				buf.remove(badLines.get(i)); //I think I removed a bug (F to my config-files)
-			}
+			}*/
 		}
 	}
 	

@@ -1,0 +1,14 @@
+MOTD=Welcome to $c's Rift! Hope you enjoy the stream $s.
+ALLOW_MOTD=yes
+ALLOW_SECRET=yes
+ALLOW_VERSION=yes
+ALLOW_COMMANDS=yes
+ALLOW_QUOTE=yes
+ALLOW_TEST=yes
+ALLOW_LORE=yes
+ALLOW_STORY=yes
+ALLOW_BADASS=yes
+ALLOW_BED_RESPONSE=yes
+ACCOUNT=
+OAUTH=
+CHANNEL=
