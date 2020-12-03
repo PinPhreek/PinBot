@@ -42,11 +42,20 @@ public class Reader {
 		String s = null;
 		try {
 			sc = new Scanner(f);
+			String[] split;
 			while (sc.hasNextLine()) {
 				s = sc.nextLine();
 				if (s.length() > 0) {
 					if (s.charAt(0) == '"')
 						quotes.add(s);
+					else if(s.charAt(0) == '{') {
+						String s1 = s.replace("{", "").replace("}", "");
+						split = s1.split(",");
+						s = s1.replace("$c1", split[1]);
+						if(split.length == 3)
+							s1 = s.replace("$c2", split[2]);
+						quotes.add(s1);
+					}
 				}
 				s = null;
 			}
