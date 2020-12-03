@@ -35,6 +35,7 @@ public class Config {
 	public static String oauth = null;
 	public static String channel = null;
 	
+	@SuppressWarnings("unlikely-arg-type")
 	public Config() throws IOException {
 		
 		os = System.getProperties().getProperty("os.name");
@@ -55,8 +56,6 @@ public class Config {
 				msg = "Created your config-file $c.";
 				w = new FileWriter(f);
 				w.write("MOTD=Welcome to $c's Rift! Hope you enjoy the stream $s.\r\n");
-				w.write("ALLOW_UWU=yes\r\n");
-				w.write("ALLOW_MUTE=yes\r\n");
 				w.write("ALLOW_MOTD=yes\r\n");
 				w.write("ALLOW_SECRET=yes\r\n");
 				w.write("ALLOW_VERSION=yes\r\n");
@@ -69,7 +68,7 @@ public class Config {
 				w.write("ALLOW_BED_RESPONSE=yes\r\n");
 				w.write("ACCOUNT=\r\n");
 				w.write("OAUTH=\r\n");
-				w.write("CHANNEL=doskiilee\r\n");
+				w.write("CHANNEL=\r\n");
 				w.flush();
 				w.close();
 				System.out.println("PLEASE COMPLETE YOUR CONFIG-FILE!");
@@ -89,7 +88,7 @@ public class Config {
 					badLines.add(i);
 					continue;
 				}	
-				if(buf.get(i).startsWith("MOTD")) {
+				else if(buf.get(i).startsWith("MOTD")) {
 					
 					splitt = buf.get(i).split("=");
 					if(splitt.length == 2)
@@ -97,17 +96,6 @@ public class Config {
 					else {
 						System.out.println("REALLY? YOU KNOW HOW THIS WORKS, RIGHT?");
 					}
-				}
-				else if(buf.get(i).startsWith("ALLOW_UWU")) {
-					splitt = buf.get(i).split("=");
-					if(splitt.length == 2) {
-						enableUwu = splitt[1].equalsIgnoreCase("0") || splitt[1].equalsIgnoreCase("no") ? false : true;
-					}
-				}
-				else if(buf.get(i).startsWith("ALLOW_MUTE")) {//buggy
-					splitt = buf.get(i).split("=");
-					if(splitt.length == 2)
-						enableMute = splitt[1].equalsIgnoreCase("0") || splitt[1].equalsIgnoreCase("no") ? false : true;
 				}
 				else if(buf.get(i).startsWith("ALLOW_MOTD")) {//buggy
 					splitt = buf.get(i).split("=");
@@ -197,7 +185,7 @@ public class Config {
 			
 			//remove unnecessary lines
 			for(int i = badLines.size(); i > -1;i--) {
-				buf.remove(i);
+				buf.remove(badLines.get(i)); //I think I removed a bug (F to my config-files)
 			}
 		}
 	}
@@ -222,7 +210,7 @@ public class Config {
 		else if(os.equalsIgnoreCase("Linux")) {//we also don't support mac here
 			f = new File("config/config.txt");
 		}
-		else {
+		else {//have fun using this mac users
 			f = new File("config.txt");
 		}
 		w = new FileWriter(f);
