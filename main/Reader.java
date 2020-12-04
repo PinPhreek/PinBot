@@ -49,12 +49,11 @@ public class Reader {
 					if (s.charAt(0) == '"')
 						quotes.add(s);
 					else if(s.charAt(0) == '{') {
-						String s1 = s.replace("{", "").replace("}", "");
-						split = s1.split(",");
-						s = s1.replace("$c1", split[1]);
+						split = s.replace("{", "").replace("}", "").split(",");
+						s = split[0].replace("$c1", split[1]);
 						if(split.length == 3)
-							s1 = s.replace("$c2", split[2]);
-						quotes.add(s1);
+							split[0] = s.replace("$c2", split[2]);
+						quotes.add(split[0]);
 					}
 				}
 				s = null;
