@@ -43,6 +43,7 @@ public class Reader {
 		try {
 			sc = new Scanner(f);
 			String[] split;
+			loadedQuotes = champion;
 			while (sc.hasNextLine()) {
 				s = sc.nextLine();
 				if (s.length() > 0) {
